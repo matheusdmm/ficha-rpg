@@ -40,7 +40,6 @@ const initialCharacter: Character = {
   inventory: [],
 };
 
-// Definindo o reducer para as ações
 const characterReducer = (
   state: Character,
   action: CharacterAction
@@ -62,7 +61,6 @@ const characterReducer = (
   }
 };
 
-// Criando contexto e provedor
 const CharacterContext = createContext<{
   state: Character;
   dispatch: Dispatch<CharacterAction>;
