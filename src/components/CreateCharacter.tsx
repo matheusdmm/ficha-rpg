@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CharacterContext from '../context/CharacterContext';
+import baseValues from '../Data/BaseCharacter';
 
 const CreateCharacter: React.FC = () => {
   const { dispatch } = useContext(CharacterContext);
