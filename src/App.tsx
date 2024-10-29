@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import CharacterSheet from './pages/CharacterSheet';
 import CreateCharacter from './pages/CreateCharacter';
-import CharacterList from './components/CharacterList';
+import CharacterList from './pages/CharacterList';
 import StatusSummary from './pages/CharacterSummary';
 import Sidebar from './components/Sidebar';
 import { CharacterProvider } from './context/CharacterContext';

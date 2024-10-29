@@ -66,10 +66,15 @@ const CharacterReducer = (state: CharacterState, action: Action): CharacterState
   }
 };
 
-const CharacterContext = createContext<any>(null);
+const CharacterContext = createContext<CharacterState | null>(null);
 
 export const CharacterProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(CharacterReducer, initialState);
+
+  const handleCreateCharacter = (characterData: CharacterState) => {
+    setCharacter(characterData);
+  };
+
   return (
     <CharacterContext.Provider value={{ state, dispatch }}>{children}</CharacterContext.Provider>
   );

@@ -1,5 +1,10 @@
 export interface CharacterStats {
-  [key: string]: number | string; // Permite valores como número ou string
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
+  wisdom: number;
+  charisma: number;
 }
 
 export interface CharacterState {

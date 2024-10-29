@@ -1,14 +1,18 @@
 import React, { useContext } from 'react';
 import CharacterContext from '../context/CharacterContext';
 
+interface StatsType {
+  [key: string]: number;
+}
+
 const Stats: React.FC = () => {
   const { state, dispatch } = useContext(CharacterContext);
-  const stats = Object.keys(state.stats) as Array<keyof typeof state.stats>;
+  const stats = Object.keys(state.stats) as Array<keyof StatsType>;
 
   document.title = 'Status';
 
   const handleStatChange = React.useCallback(
-    (stat: keyof typeof state.stats) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    (stat: keyof StatsType) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = parseInt(e.target.value);
       dispatch({ type: 'UPDATE_STAT', payload: { stat, value } });
     },
