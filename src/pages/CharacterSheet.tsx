@@ -8,6 +8,8 @@ const CharacterSheet: React.FC = () => {
     const characterData = {
       name: state.name,
       stats: state.stats,
+      avatar: state.avatar,
+      class: state.class,
     };
 
     const blob = new Blob([JSON.stringify(characterData, null, 2)], {
@@ -22,6 +24,18 @@ const CharacterSheet: React.FC = () => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const saveToLocalStorage = () => {
+    const characterData = {
+      name: state.name,
+      stats: state.stats,
+      avatar: state.avatar,
+      class: state.class,
+    };
+
+    localStorage.setItem('character', JSON.stringify(characterData));
+    alert('Personagem salvo no Local Storage!');
   };
 
   return (
@@ -41,15 +55,28 @@ const CharacterSheet: React.FC = () => {
               {value}
             </li>
           ))}
+        <li className="mb-2">
+          <strong>Classe:</strong> {state.class}
+        </li>
+        <li className="mb-2">
+          <strong>Avatar:</strong> {state.avatar}
+        </li>
       </ul>
 
-      {/* Botão para Exportar JSON */}
-      <button
-        onClick={exportToJSON}
-        className="mt-6 w-full p-2 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        Exportar para JSON
-      </button>
+      <div className="flex space-x-4">
+        <button
+          onClick={exportToJSON}
+          className="mt-6 w-full p-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Exportar para JSON
+        </button>
+        <button
+          onClick={saveToLocalStorage}
+          className="mt-6 w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Salvar no Local Storage
+        </button>
+      </div>
     </div>
   );
 };

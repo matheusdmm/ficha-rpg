@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CharacterContext from '../context/CharacterContext';
-import D20Dice from '../features/d20';
+import D20Dice from '../features/dices/d20';
+import { fetchClasses } from '../features/api/fetchApi'; // Importando a função de fetch
 
 const CreateCharacter: React.FC = () => {
   const { dispatch } = useContext(CharacterContext);
@@ -18,6 +19,7 @@ const CreateCharacter: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
+  const [classes, setClasses] = useState<string[]>([]); // Estado para armazenar as classes
   const navigate = useNavigate();
 
   const handleStatChange = (stat: keyof typeof stats, value: number) => {
@@ -44,6 +46,16 @@ const CreateCharacter: React.FC = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  // Fetch classes from the D&D API
+  useEffect(() => {
+    const loadClasses = async () => {
+      const fetchedClasses = await fetchClasses();
+      setClasses(fetchedClasses); // Armazena as classes obtidas da API
+    };
+
+    loadClasses();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gradient-to-r from-[#F9FAFB] to-[#E5E7EB] text-[#1F2937]">
@@ -141,7 +153,7 @@ const CreateCharacter: React.FC = () => {
           Escolher Classe
         </h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
-          {['Guerreiro', 'Mago', 'Ladrão', 'Clérigo'].map((classe) => (
+          {classes.map((classe) => (
             <button
               key={classe}
               onClick={() => setSelectedClass(classe)}

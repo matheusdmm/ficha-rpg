@@ -1,32 +1,20 @@
-import { createContext, useReducer, ReactNode, Dispatch } from 'react';
+import React, { createContext, useReducer, ReactNode } from 'react';
 
-interface Stats {
-  strength: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
-}
-
-interface InventoryItem {
-  item: string;
-  quantity: number;
-}
-
-interface Character {
+interface State {
   name: string;
-  stats: Stats;
-  abilities: string[];
-  inventory: InventoryItem[];
+  stats: {
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+  };
+  avatar: string;
+  class: string;
 }
 
-interface CharacterAction {
-  type: string;
-  payload?: any;
-}
-
-const initialCharacter: Character = {
+const initialState: State = {
   name: '',
   stats: {
     strength: 10,
@@ -36,41 +24,46 @@ const initialCharacter: Character = {
     wisdom: 10,
     charisma: 10,
   },
-  abilities: [],
-  inventory: [],
+  avatar: '',
+  class: '',
 };
 
-const characterReducer = (
-  state: Character,
-  action: CharacterAction
-): Character => {
+type Action =
+  | { type: 'SET_NAME'; payload: string }
+  | { type: 'SET_AVATAR'; payload: string }
+  | { type: 'SET_CLASS'; payload: string }
+  | { type: 'UPDATE_STAT'; payload: { stat: string; value: number } };
+
+const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'SET_NAME':
       return { ...state, name: action.payload };
+    case 'SET_AVATAR':
+      return { ...state, avatar: action.payload };
+    case 'SET_CLASS':
+      return { ...state, class: action.payload };
     case 'UPDATE_STAT':
       return {
         ...state,
         stats: { ...state.stats, [action.payload.stat]: action.payload.value },
       };
-    case 'ADD_ABILITY':
-      return { ...state, abilities: [...state.abilities, action.payload] };
-    case 'ADD_ITEM':
-      return { ...state, inventory: [...state.inventory, action.payload] };
     default:
       return state;
   }
 };
 
 const CharacterContext = createContext<{
-  state: Character;
-  dispatch: Dispatch<CharacterAction>;
+  state: State;
+  dispatch: React.Dispatch<Action>;
 }>({
-  state: initialCharacter,
+  state: initialState,
   dispatch: () => null,
 });
 
-export const CharacterProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(characterReducer, initialCharacter);
+export const CharacterProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <CharacterContext.Provider value={{ state, dispatch }}>
