@@ -2,7 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CharacterContext from '../context/CharacterContext';
 import D20Dice from '../features/dices/d20';
-import { fetchClasses } from '../features/api/fetchApi'; // Importando a função de fetch
+import { fetchClasses, fetchRaces, fetchSubRaces } from '../features/api/fetchApi';
+import ClassSelector from '../components/ClassSelector';
+import AvatarSelection from '../components/AvatarSelection';
+import CharacterAttributes from '../components/CharacterAttributes';
+import EquipmentSelector from '../components/EquipmentSelector';
 
 const CreateCharacter: React.FC = () => {
   const { dispatch } = useContext(CharacterContext);
@@ -19,11 +23,45 @@ const CreateCharacter: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
-  const [classes, setClasses] = useState<string[]>([]); // Estado para armazenar as classes
+  const [classOptions, setClassOptions] = useState<string[]>([]);
+  const [races, setRaces] = useState<string[]>([]);
+  const [selectedRace, setSelectedRace] = useState('');
+  const [subRaces, setSubRaces] = useState<string[]>([]);
+  const [selectedSubRace, setSelectedSubRace] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
+  const [selectedEquipments, setSelectedEquipments] = useState<any[]>([]);
   const navigate = useNavigate();
 
+  document.title = 'Criação de personagem';
+
+  useEffect(() => {
+    const loadClasses = async () => {
+      const classes = await fetchClasses();
+      setClassOptions(classes);
+    };
+
+    const loadRaces = async () => {
+      const races = await fetchRaces();
+      setRaces(races);
+    };
+
+    loadClasses();
+    loadRaces();
+  }, []);
+
+  useEffect(() => {
+    const loadSubRaces = async () => {
+      if (selectedRace) {
+        const subRaces = await fetchSubRaces();
+        setSubRaces(subRaces);
+      }
+    };
+
+    loadSubRaces();
+  }, [selectedRace]);
+
   const handleStatChange = (stat: keyof typeof stats, value: number) => {
-    setStats({ ...stats, [stat]: value });
+    setStats(prev => ({ ...prev, [stat]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,6 +69,9 @@ const CreateCharacter: React.FC = () => {
     dispatch({ type: 'SET_NAME', payload: name });
     dispatch({ type: 'SET_AVATAR', payload: selectedAvatar });
     dispatch({ type: 'SET_CLASS', payload: selectedClass });
+    dispatch({ type: 'SET_RACE', payload: selectedRace });
+    dispatch({ type: 'SET_SUBRACE', payload: selectedSubRace });
+    dispatch({ type: 'SET_EQUIPMENTS', payload: selectedEquipments });
     Object.entries(stats).forEach(([stat, value]) => {
       dispatch({ type: 'UPDATE_STAT', payload: { stat, value } });
     });
@@ -43,133 +84,59 @@ const CreateCharacter: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Fetch classes from the D&D API
-  useEffect(() => {
-    const loadClasses = async () => {
-      const fetchedClasses = await fetchClasses();
-      setClasses(fetchedClasses); // Armazena as classes obtidas da API
-    };
-
-    loadClasses();
-  }, []);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gradient-to-r from-[#F9FAFB] to-[#E5E7EB] text-[#1F2937]">
-      <div className="flex-1 flex flex-col items-center justify-center p-8">
-        <h1 className="text-4xl font-bold mb-6 text-[#4A3B2A]">
-          Criar Personagem
-        </h1>
-        <form
+    <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-lg overflow-y-auto">
+      <h1 className="text-3xl font-bold mb-6 text-[#4A3B2A] text-center">Criar Personagem</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl px-4">
+        <AvatarSelection selectedAvatar={selectedAvatar} onSelectAvatar={setSelectedAvatar} />
+
+        <CharacterAttributes
+          name={name}
+          setName={setName}
+          stats={stats}
+          handleStatChange={handleStatChange}
           onSubmit={handleSubmit}
-          className="w-full max-w-lg bg-white rounded-lg shadow-lg p-6"
-        >
-          <label className="block mb-4">
-            <span className="text-lg font-semibold text-[#4A3B2A]">
-              Nome do Personagem
-            </span>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
-              required
-            />
-          </label>
+          races={races}
+          selectedRace={selectedRace}
+          setSelectedRace={setSelectedRace}
+          subRaces={subRaces}
+          selectedSubRace={selectedSubRace}
+          setSelectedSubRace={setSelectedSubRace}
+        />
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {Object.keys(stats).map((stat) => (
-              <label key={stat} className="text-center">
-                <span className="block font-semibold text-[#4A3B2A]">
-                  {stat.charAt(0).toUpperCase() + stat.slice(1)}
-                </span>
-                <input
-                  type="number"
-                  value={stats[stat as keyof typeof stats]}
-                  onChange={(e) =>
-                    handleStatChange(
-                      stat as keyof typeof stats,
-                      parseInt(e.target.value)
-                    )
-                  }
-                  className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
-                  required
-                />
-              </label>
-            ))}
-          </div>
+        <EquipmentSelector
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
+          selectedEquipments={selectedEquipments}
+          setSelectedEquipments={setSelectedEquipments}
+        />
 
-          <div className="mt-4 text-center">
-            <h2 className="text-xl font-bold mb-2 text-[#4A3B2A]">
-              Rolar Dados
-            </h2>
-            <div className="flex justify-center space-x-3 mb-4">
-              {[4, 6, 10, 20].map((sides) => (
-                <button
-                  key={sides}
-                  type="button"
-                  onClick={() => rollDie(sides)}
-                  className="p-2 px-4 bg-[#4B8B3B] text-white rounded hover:bg-[#3B6831] shadow-md transition duration-200"
-                >
-                  Rolar d{sides}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="mt-6 w-full p-3 bg-[#4B8B3B] text-white rounded hover:bg-[#3B6831] font-semibold shadow-inner transition duration-200"
-          >
-            Criar Personagem
-          </button>
-        </form>
+        <ClassSelector
+          selectedClass={selectedClass}
+          setSelectedClass={setSelectedClass}
+          classOptions={classOptions}
+        />
       </div>
 
-      <div className="flex-1 p-8 bg-white rounded-lg shadow-lg mx-4">
-        <h2 className="text-2xl font-bold text-[#4A3B2A] mb-4">
-          Escolher Avatar
-        </h2>
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {['Avatar1', 'Avatar2', 'Avatar3'].map((avatar) => (
-            <button
-              key={avatar}
-              onClick={() => setSelectedAvatar(avatar)}
-              className={`p-4 border rounded-lg transition duration-200 ${
-                selectedAvatar === avatar
-                  ? 'border-[#4B8B3B] bg-[#D1B790] shadow-lg'
-                  : 'border-[#D1D5DB]'
-              }`}
-            >
-              {avatar}
-            </button>
-          ))}
-        </div>
+      <button
+        onClick={() => rollDie(20)}
+        className="mt-6 w-full max-w-xs p-3 bg-[#4B8B3B] text-white rounded hover:bg-[#3B6831] font-semibold transition duration-200"
+      >
+        Rolar D20
+      </button>
 
-        <h2 className="text-2xl font-bold text-[#4A3B2A] mb-4">
-          Escolher Classe
-        </h2>
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {classes.map((classe) => (
-            <button
-              key={classe}
-              onClick={() => setSelectedClass(classe)}
-              className={`p-4 border rounded-lg transition duration-200 ${
-                selectedClass === classe
-                  ? 'border-[#4B8B3B] bg-[#D1B790] shadow-lg'
-                  : 'border-[#D1D5DB]'
-              }`}
-            >
-              {classe}
-            </button>
-          ))}
-        </div>
-      </div>
+      <button
+        type="submit"
+        onClick={handleSubmit}
+        className="mt-4 w-full max-w-xs p-3 bg-[#4B8B3B] text-white rounded hover:bg-[#3B6831] font-semibold transition duration-200"
+      >
+        Criar Personagem
+      </button>
 
-      {isModalOpen && <D20Dice result={rollResult!} onClose={closeModal} />}
+      {isModalOpen && rollResult !== null && <D20Dice result={rollResult} onClose={closeModal} />}
     </div>
   );
 };

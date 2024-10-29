@@ -1,7 +1,13 @@
+// CharacterContext.tsx
+
 import React, { createContext, useReducer, ReactNode } from 'react';
 
-interface State {
+interface CharacterState {
   name: string;
+  avatar: string;
+  class: string;
+  race: string;
+  subrace: string;
   stats: {
     strength: number;
     dexterity: number;
@@ -10,12 +16,15 @@ interface State {
     wisdom: number;
     charisma: number;
   };
-  avatar: string;
-  class: string;
+  equipments: any[]; // Pode ser mais específico se você tiver uma interface para equipamentos
 }
 
-const initialState: State = {
+const initialState: CharacterState = {
   name: '',
+  avatar: '',
+  class: '',
+  race: '',
+  subrace: '',
   stats: {
     strength: 10,
     dexterity: 10,
@@ -24,17 +33,19 @@ const initialState: State = {
     wisdom: 10,
     charisma: 10,
   },
-  avatar: '',
-  class: '',
+  equipments: [],
 };
 
 type Action =
   | { type: 'SET_NAME'; payload: string }
   | { type: 'SET_AVATAR'; payload: string }
   | { type: 'SET_CLASS'; payload: string }
-  | { type: 'UPDATE_STAT'; payload: { stat: string; value: number } };
+  | { type: 'SET_RACE'; payload: string }
+  | { type: 'SET_SUBRACE'; payload: string }
+  | { type: 'UPDATE_STAT'; payload: { stat: keyof typeof initialState.stats; value: number } }
+  | { type: 'SET_EQUIPMENTS'; payload: any[] };
 
-const reducer = (state: State, action: Action) => {
+const CharacterReducer = (state: CharacterState, action: Action): CharacterState => {
   switch (action.type) {
     case 'SET_NAME':
       return { ...state, name: action.payload };
@@ -42,33 +53,25 @@ const reducer = (state: State, action: Action) => {
       return { ...state, avatar: action.payload };
     case 'SET_CLASS':
       return { ...state, class: action.payload };
+    case 'SET_RACE':
+      return { ...state, race: action.payload };
+    case 'SET_SUBRACE':
+      return { ...state, subrace: action.payload };
     case 'UPDATE_STAT':
-      return {
-        ...state,
-        stats: { ...state.stats, [action.payload.stat]: action.payload.value },
-      };
+      return { ...state, stats: { ...state.stats, [action.payload.stat]: action.payload.value } };
+    case 'SET_EQUIPMENTS':
+      return { ...state, equipments: action.payload };
     default:
       return state;
   }
 };
 
-const CharacterContext = createContext<{
-  state: State;
-  dispatch: React.Dispatch<Action>;
-}>({
-  state: initialState,
-  dispatch: () => null,
-});
+const CharacterContext = createContext<any>(null);
 
-export const CharacterProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
+export const CharacterProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(CharacterReducer, initialState);
   return (
-    <CharacterContext.Provider value={{ state, dispatch }}>
-      {children}
-    </CharacterContext.Provider>
+    <CharacterContext.Provider value={{ state, dispatch }}>{children}</CharacterContext.Provider>
   );
 };
 

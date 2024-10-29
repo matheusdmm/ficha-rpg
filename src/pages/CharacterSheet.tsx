@@ -3,6 +3,7 @@ import CharacterContext from '../context/CharacterContext';
 
 const CharacterSheet: React.FC = () => {
   const { state } = useContext(CharacterContext);
+  document.title = 'Ficha do personagem';
 
   const exportToJSON = () => {
     const characterData = {
@@ -10,6 +11,8 @@ const CharacterSheet: React.FC = () => {
       stats: state.stats,
       avatar: state.avatar,
       class: state.class,
+      race: state.race,
+      subRace: state.subRace,
     };
 
     const blob = new Blob([JSON.stringify(characterData, null, 2)], {
@@ -32,6 +35,8 @@ const CharacterSheet: React.FC = () => {
       stats: state.stats,
       avatar: state.avatar,
       class: state.class,
+      race: state.race,
+      subRace: state.subRace,
     };
 
     localStorage.setItem('character', JSON.stringify(characterData));
@@ -40,9 +45,7 @@ const CharacterSheet: React.FC = () => {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-gray-100 rounded-lg shadow-lg mt-10">
-      <h1 className="text-3xl font-bold text-center mb-4">
-        Ficha do Personagem
-      </h1>
+      <h1 className="text-3xl font-bold text-center mb-4">Ficha do Personagem</h1>
 
       <p>
         <strong>Nome:</strong> {state.name}
@@ -51,12 +54,17 @@ const CharacterSheet: React.FC = () => {
         {state.stats &&
           Object.entries(state.stats).map(([stat, value]) => (
             <li key={stat} className="mb-2">
-              <strong>{stat.charAt(0).toUpperCase() + stat.slice(1)}:</strong>{' '}
-              {value}
+              <strong>{stat.charAt(0).toUpperCase() + stat.slice(1)}:</strong> {value}
             </li>
           ))}
         <li className="mb-2">
           <strong>Classe:</strong> {state.class}
+        </li>
+        <li className="mb-2">
+          <strong>Raça:</strong> {state.race}
+        </li>
+        <li className="mb-2">
+          <strong>Sub-raça:</strong> {state.subRace}
         </li>
         <li className="mb-2">
           <strong>Avatar:</strong> {state.avatar}

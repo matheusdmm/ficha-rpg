@@ -9,12 +9,14 @@ Um aplicativo de criação de ficha de personagem, rolagem de dados D20 e consul
 - **TypeScript**: Superset do JavaScript que adiciona tipagem estática.
 - **Tailwind CSS**: Framework CSS para estilização moderna e responsiva.
 - **Context API**: Para gerenciamento de estado global.
-- **D&D 5E API**: Papra consulta de classes e habilidades.
+- **React Select**: Para listas de multipla seleção.
+- **D&D 5E API**: Para consulta de classes e habilidades.
+- **Deep AI**: Para os avatares dos personagens.
 
 ## Funcionalidades
 
 - Criação de personagens com nome e atributos.
 - Rolagem de dados D4, D6, D10 e D20 com animações 3D.
 - Exibição do resultado da rolagem diretamente na face do dado.
-- Seção para escolher o avatar do personagem (a ser implementada).
+- Seção para escolher o avatar do personagem.
 - Interface moderna e responsiva.
