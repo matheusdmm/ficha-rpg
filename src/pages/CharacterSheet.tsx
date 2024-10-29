@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import CharacterContext from '../context/CharacterContext';
+import { CharacterStats, CharacterState } from '../types/CharacterStats';
 
 const CharacterSheet: React.FC = () => {
   const { state } = useContext(CharacterContext);
+  const stats: CharacterStats = state.stats;
   document.title = 'Ficha do personagem';
 
   const exportToJSON = () => {
@@ -52,9 +54,11 @@ const CharacterSheet: React.FC = () => {
       </p>
       <ul className="mt-4">
         {state.stats &&
+          typeof state.stats === 'object' &&
           Object.entries(state.stats).map(([stat, value]) => (
             <li key={stat} className="mb-2">
-              <strong>{stat.charAt(0).toUpperCase() + stat.slice(1)}:</strong> {value}
+              <strong>{stat.charAt(0).toUpperCase() + stat.slice(1)}:</strong>{' '}
+              {value as string | number}
             </li>
           ))}
         <li className="mb-2">

@@ -4,6 +4,8 @@ import CharacterContext from '../context/CharacterContext';
 const CharacterList: React.FC = () => {
   const { state } = useContext(CharacterContext);
 
+  document.title = 'Personagens criados';
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Personagens Criados</h1>

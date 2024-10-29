@@ -3,13 +3,17 @@ import CharacterContext from '../context/CharacterContext';
 
 const Stats: React.FC = () => {
   const { state, dispatch } = useContext(CharacterContext);
-  const stats = Object.keys(state.stats) as (keyof typeof state.stats)[];
+  const stats = Object.keys(state.stats) as Array<keyof typeof state.stats>;
 
   document.title = 'Status';
 
-  const handleStatChange = (stat: keyof typeof state.stats, value: number) => {
-    dispatch({ type: 'UPDATE_STAT', payload: { stat, value } });
-  };
+  const handleStatChange = React.useCallback(
+    (stat: keyof typeof state.stats) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(e.target.value);
+      dispatch({ type: 'UPDATE_STAT', payload: { stat, value } });
+    },
+    [dispatch],
+  );
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -19,7 +23,7 @@ const Stats: React.FC = () => {
           <input
             type="number"
             value={state.stats[stat]}
-            onChange={e => handleStatChange(stat, parseInt(e.target.value))}
+            onChange={handleStatChange(stat)}
             className="mt-2 p-2 border border-gray-300 rounded w-full text-center"
           />
         </div>

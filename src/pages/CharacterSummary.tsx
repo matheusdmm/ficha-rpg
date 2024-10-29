@@ -1,9 +1,11 @@
+// StatusSummary.tsx
 import React, { useContext } from 'react';
 import CharacterContext from '../context/CharacterContext';
+import { CharacterStats } from '../types/CharacterStats';
 
 const StatusSummary: React.FC = () => {
   const { state } = useContext(CharacterContext);
-  const stats = state.stats;
+  const stats: CharacterStats = state.stats;
 
   document.title = 'Sumário';
 
@@ -14,7 +16,7 @@ const StatusSummary: React.FC = () => {
         {Object.entries(stats).map(([key, value]) => (
           <li key={key} className="mb-2">
             <span className="font-semibold">{key.charAt(0).toUpperCase() + key.slice(1)}:</span>{' '}
-            {value}
+            {value as string | number} {/* Casting de value para string ou number */}
           </li>
         ))}
       </ul>

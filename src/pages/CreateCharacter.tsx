@@ -7,18 +7,11 @@ import ClassSelector from '../components/ClassSelector';
 import AvatarSelection from '../components/AvatarSelection';
 import CharacterAttributes from '../components/CharacterAttributes';
 import EquipmentSelector from '../components/EquipmentSelector';
+import { Stats } from '../types/Stats';
 
 const CreateCharacter: React.FC = () => {
   const { dispatch } = useContext(CharacterContext);
   const [name, setName] = useState('');
-  const [stats, setStats] = useState({
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 10,
-  });
   const [rollResult, setRollResult] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState('');
@@ -32,7 +25,16 @@ const CreateCharacter: React.FC = () => {
   const [selectedEquipments, setSelectedEquipments] = useState<any[]>([]);
   const navigate = useNavigate();
 
-  document.title = 'Criação de personagem';
+  const [stats, setStats] = useState<Stats>({
+    strength: 10,
+    dexterity: 10,
+    constitution: 10,
+    intelligence: 10,
+    wisdom: 10,
+    charisma: 10,
+  });
+
+  document.title = 'Criação de Personagem';
 
   useEffect(() => {
     const loadClasses = async () => {
@@ -60,7 +62,7 @@ const CreateCharacter: React.FC = () => {
     loadSubRaces();
   }, [selectedRace]);
 
-  const handleStatChange = (stat: keyof typeof stats, value: number) => {
+  const handleStatChange = (stat: keyof Stats, value: number) => {
     setStats(prev => ({ ...prev, [stat]: value }));
   };
 
@@ -72,9 +74,14 @@ const CreateCharacter: React.FC = () => {
     dispatch({ type: 'SET_RACE', payload: selectedRace });
     dispatch({ type: 'SET_SUBRACE', payload: selectedSubRace });
     dispatch({ type: 'SET_EQUIPMENTS', payload: selectedEquipments });
+
     Object.entries(stats).forEach(([stat, value]) => {
-      dispatch({ type: 'UPDATE_STAT', payload: { stat, value } });
+      dispatch({
+        type: 'UPDATE_STAT',
+        payload: { stat: stat as keyof Stats, value },
+      });
     });
+
     navigate('/character-sheet');
   };
 
