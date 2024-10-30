@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CharacterContext from '../context/CharacterContext';
 import D20Dice from '../features/dices/d20';
 import { fetchClasses, fetchRaces, fetchSubRaces } from '../features/api/fetchApi';
 import ClassSelector from '../components/ClassSelector';
@@ -8,9 +7,10 @@ import AvatarSelection from '../components/AvatarSelection';
 import CharacterAttributes from '../components/CharacterAttributes';
 import EquipmentSelector from '../components/EquipmentSelector';
 import { Stats } from '../types/Stats';
+import { createCharacter, updateCharacter } from '../logic/CharacterStorage';
+import { baseValues, RandomBaseValues } from '../Data/BaseCharacter';
 
 const CreateCharacter: React.FC = () => {
-  const { dispatch } = useContext(CharacterContext);
   const [name, setName] = useState('');
   const [rollResult, setRollResult] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,16 +23,8 @@ const CreateCharacter: React.FC = () => {
   const [selectedSubRace, setSelectedSubRace] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
   const [selectedEquipments, setSelectedEquipments] = useState<any[]>([]);
+  const [stats, setStats] = useState<Stats>(RandomBaseValues);
   const navigate = useNavigate();
-
-  const [stats, setStats] = useState<Stats>({
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 10,
-  });
 
   document.title = 'Criação de Personagem';
 
@@ -68,20 +60,26 @@ const CreateCharacter: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch({ type: 'SET_NAME', payload: name });
-    dispatch({ type: 'SET_AVATAR', payload: selectedAvatar });
-    dispatch({ type: 'SET_CLASS', payload: selectedClass });
-    dispatch({ type: 'SET_RACE', payload: selectedRace });
-    dispatch({ type: 'SET_SUBRACE', payload: selectedSubRace });
-    dispatch({ type: 'SET_EQUIPMENTS', payload: selectedEquipments });
+    const characterData = {
+      name,
+      stats,
+      avatar: selectedAvatar,
+      class: selectedClass,
+      race: selectedRace,
+      subRace: selectedSubRace,
+      equipment: selectedEquipments,
+    };
+    createCharacter(characterData);
 
-    Object.entries(stats).forEach(([stat, value]) => {
-      dispatch({
-        type: 'UPDATE_STAT',
-        payload: { stat: stat as keyof Stats, value },
-      });
-    });
-
+    // reset
+    setName('');
+    setStats(RandomBaseValues());
+    setSelectedAvatar('');
+    setSelectedClass('');
+    setSelectedRace('');
+    setSelectedSubRace('');
+    setSelectedCategories([]);
+    setSelectedEquipments([]);
     navigate('/character-sheet');
   };
 

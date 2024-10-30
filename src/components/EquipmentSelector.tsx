@@ -17,6 +17,7 @@ const EquipmentSelector: React.FC<EquipmentSelectorProps> = ({
 }) => {
   const [categoryOptions, setCategoryOptions] = useState<any[]>([]);
   const [equipmentOptions, setEquipmentOptions] = useState<any[]>([]);
+  const [filteredEquipmentOptions, setFilteredEquipmentOptions] = useState<any[]>([]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -31,8 +32,9 @@ const EquipmentSelector: React.FC<EquipmentSelectorProps> = ({
     const loadEquipments = async () => {
       const equipments = await fetchEquipment();
       const formattedOptions = equipments.map(equipment => ({
-        value: equipment,
-        label: equipment,
+        value: equipment.name,
+        label: equipment.name,
+        category: equipment.category,
       }));
       setEquipmentOptions(formattedOptions);
     };
@@ -40,6 +42,17 @@ const EquipmentSelector: React.FC<EquipmentSelectorProps> = ({
     loadCategories();
     loadEquipments();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategories.length > 0) {
+      const filteredEquipments = equipmentOptions.filter(equipment =>
+        selectedCategories.some(category => category.value === equipment.category),
+      );
+      setFilteredEquipmentOptions(filteredEquipments);
+    } else {
+      setFilteredEquipmentOptions([]);
+    }
+  }, [selectedCategories, equipmentOptions]);
 
   const handleCategoryChange = (selected: any) => {
     setSelectedCategories(selected || []);
@@ -68,11 +81,12 @@ const EquipmentSelector: React.FC<EquipmentSelectorProps> = ({
       </label>
       <Select
         isMulti
-        options={equipmentOptions}
+        options={filteredEquipmentOptions}
         value={selectedEquipments}
         onChange={handleEquipmentChange}
         className="basic-multi-select"
         classNamePrefix="select"
+        isDisabled={filteredEquipmentOptions.length === 0}
       />
     </div>
   );

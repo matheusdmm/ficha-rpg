@@ -1,4 +1,4 @@
-const baseValues = {
+export const baseValues = {
   strength: 10,
   dexterity: 10,
   constitution: 10,
@@ -7,4 +7,13 @@ const baseValues = {
   charisma: 10,
 };
 
-export default baseValues;
+export const RandomBaseValues = () => {
+  return {
+    strength: Math.floor(Math.random() * 10) + 1,
+    dexterity: Math.floor(Math.random() * 10) + 1,
+    constitution: Math.floor(Math.random() * 10) + 1,
+    intelligence: Math.floor(Math.random() * 10) + 1,
+    wisdom: Math.floor(Math.random() * 10) + 1,
+    charisma: Math.floor(Math.random() * 10) + 1,
+  };
+};

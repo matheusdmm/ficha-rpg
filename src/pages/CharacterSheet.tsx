@@ -1,30 +1,30 @@
-import React, { useContext } from 'react';
-import CharacterContext from '../context/CharacterContext';
+import React, { useEffect, useState } from 'react';
 import { CharacterStats, CharacterState } from '../types/CharacterStats';
+import { getCharacter } from '../logic/CharacterStorage';
 
 const CharacterSheet: React.FC = () => {
-  const { state } = useContext(CharacterContext);
-  const stats: CharacterStats = state.stats;
-  document.title = 'Ficha do personagem';
+  const [character, setCharacter] = useState<CharacterState | null>(null);
 
-  const exportToJSON = () => {
-    const characterData = {
-      name: state.name,
-      stats: state.stats,
-      avatar: state.avatar,
-      class: state.class,
-      race: state.race,
-      subRace: state.subRace,
+  useEffect(() => {
+    const fetchCharacter = async () => {
+      const loadedCharacter = await getCharacter();
+      setCharacter(loadedCharacter);
     };
 
-    const blob = new Blob([JSON.stringify(characterData, null, 2)], {
+    fetchCharacter();
+  }, []);
+
+  const exportToJSON = () => {
+    if (!character) return;
+
+    const blob = new Blob([JSON.stringify(character, null, 2)], {
       type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${state.name || 'personagem'}.json`;
+    link.download = `${character.name || 'personagem'}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -32,46 +32,48 @@ const CharacterSheet: React.FC = () => {
   };
 
   const saveToLocalStorage = () => {
-    const characterData = {
-      name: state.name,
-      stats: state.stats,
-      avatar: state.avatar,
-      class: state.class,
-      race: state.race,
-      subRace: state.subRace,
-    };
+    if (!character) return;
 
-    localStorage.setItem('character', JSON.stringify(characterData));
+    localStorage.setItem('character', JSON.stringify(character));
     alert('Personagem salvo no Local Storage!');
   };
+
+  if (!character) {
+    return <div>Carregando ficha do personagem...</div>;
+  }
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-gray-100 rounded-lg shadow-lg mt-10">
       <h1 className="text-3xl font-bold text-center mb-4">Ficha do Personagem</h1>
 
       <p>
-        <strong>Nome:</strong> {state.name}
+        <strong>Nome:</strong> {character.name}
       </p>
       <ul className="mt-4">
-        {state.stats &&
-          typeof state.stats === 'object' &&
-          Object.entries(state.stats).map(([stat, value]) => (
+        {character.stats &&
+          typeof character.stats === 'object' &&
+          Object.entries(character.stats).map(([stat, value]) => (
             <li key={stat} className="mb-2">
               <strong>{stat.charAt(0).toUpperCase() + stat.slice(1)}:</strong>{' '}
               {value as string | number}
             </li>
           ))}
         <li className="mb-2">
-          <strong>Classe:</strong> {state.class}
+          <strong>Classe:</strong> {character.class}
         </li>
         <li className="mb-2">
-          <strong>Raça:</strong> {state.race}
+          <strong>Raça:</strong> {character.race}
         </li>
         <li className="mb-2">
-          <strong>Sub-raça:</strong> {state.subRace}
+          <strong>Sub-raça:</strong> {character.subRace}
         </li>
         <li className="mb-2">
-          <strong>Avatar:</strong> {state.avatar}
+          <strong>Avatar:</strong> {character.avatar}
+        </li>
+        <li className="mb-2">
+          <strong>Equipamentos:</strong>{' '}
+          {character.equipment.map(equip => equip.label).join(', ') ||
+            'Nenhum equipamento selecionado.'}
         </li>
       </ul>
 

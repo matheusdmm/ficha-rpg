@@ -1,5 +1,3 @@
-// CharacterContext.tsx
-
 import React, { createContext, useReducer, ReactNode } from 'react';
 
 interface CharacterState {

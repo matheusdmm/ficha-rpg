@@ -56,14 +56,19 @@ export const fetchEquipmentCategories = async (): Promise<string[]> => {
   }
 };
 
-export const fetchEquipment = async (): Promise<string[]> => {
+export const fetchEquipment = async (): Promise<{ name: string; category: string }[]> => {
   try {
     const response = await fetch(`${dndApi}/equipment`);
+    
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
     const data = await response.json();
-    return data.results.map((equipment: { name: string }) => equipment.name);
+
+    return data.results.map((equipment: { name: string; category: string }) => ({
+      name: equipment.name,
+      category: equipment.category,
+    }));
   } catch (error) {
     console.error('Error fetching equipment:', error);
     return [];
