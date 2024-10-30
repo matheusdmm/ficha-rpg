@@ -29,15 +29,15 @@ const AvatarSelection: React.FC<AvatarSelectionProps> = ({ selectedAvatar, onSel
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextAvatar = () => {
-    setCurrentIndex(prevIndex => (prevIndex + 1) % avatars.length);
+    const newIndex = (currentIndex + 1) % avatars.length;
+    setCurrentIndex(newIndex);
+    onSelectAvatar(avatars[newIndex]);
   };
 
   const prevAvatar = () => {
-    setCurrentIndex(prevIndex => (prevIndex - 1 + avatars.length) % avatars.length);
-  };
-
-  const selectAvatar = () => {
-    onSelectAvatar(avatars[currentIndex]);
+    const newIndex = (currentIndex - 1 + avatars.length) % avatars.length;
+    setCurrentIndex(newIndex);
+    onSelectAvatar(avatars[newIndex]);
   };
 
   return (
@@ -58,7 +58,6 @@ const AvatarSelection: React.FC<AvatarSelectionProps> = ({ selectedAvatar, onSel
           className={`h-32 w-32 object-cover rounded-lg shadow-lg cursor-pointer ${
             selectedAvatar === avatars[currentIndex] ? 'border-4 border-[#4B8B3B]' : ''
           }`}
-          onClick={selectAvatar}
         />
 
         <button
