@@ -45,9 +45,11 @@ export const fetchSubRaces = async (): Promise<string[]> => {
 export const fetchEquipmentCategories = async (): Promise<string[]> => {
   try {
     const response = await fetch(`${dndApi}/equipment-categories`);
+
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
+
     const data = await response.json();
     return data.results.map((equipmentCategories: { name: string }) => equipmentCategories.name);
   } catch (error) {
@@ -56,10 +58,26 @@ export const fetchEquipmentCategories = async (): Promise<string[]> => {
   }
 };
 
-export const fetchEquipment = async (): Promise<{ name: string; category: string }[]> => {
+export const fetchEquipment = async (): Promise<string[]> => {
   try {
     const response = await fetch(`${dndApi}/equipment`);
-    
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    const data = await response.json();
+
+    return data.results.map((equipment: { name: string }) => equipment.name);
+  } catch (error) {
+    console.error('Error fetching equipment:', error);
+    return [];
+  }
+};
+
+export const fetchEquipment3 = async (): Promise<{ name: string; category: string }[]> => {
+  try {
+    const response = await fetch(`${dndApi}/equipment`);
+
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
@@ -67,7 +85,6 @@ export const fetchEquipment = async (): Promise<{ name: string; category: string
 
     return data.results.map((equipment: { name: string; category: string }) => ({
       name: equipment.name,
-      category: equipment.category,
     }));
   } catch (error) {
     console.error('Error fetching equipment:', error);
