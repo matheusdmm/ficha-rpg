@@ -44,6 +44,10 @@ const AvatarSelection: React.FC<AvatarSelectionProps> = ({ selectedAvatar, onSel
     onSelectAvatar(avatars[currentIndex]);
   };
 
+  if (!avatars) {
+    return <span className="loading loading-bars loading-lg"></span>;
+  }
+
   return (
     <div className="text-center mb-6">
       <h2 className="text-2xl font-bold text-[#4A3B2A] mb-4">Escolher Avatar</h2>

@@ -19,11 +19,9 @@ const ClassSelector: React.FC<ClassSelectorProps> = ({
           <button
             key={classe}
             onClick={() => setSelectedClass(classe)}
-            className={`p-4 border rounded-lg transition duration-200 ${
-              selectedClass === classe
-                ? 'border-[#4B8B3B] bg-[#D1B790] shadow-lg'
-                : 'border-[#D1D5DB]'
-            }`}
+            className={`btn btn-outline btn ${
+              selectedClass === classe ? 'shadow-lg scale-95' : ''
+            } hover:scale-105 active:scale-90 focus:outline-none focus:ring-2 focus:btn-primary focus:btn-primary`}
           >
             {classe}
           </button>

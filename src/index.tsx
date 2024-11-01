@@ -7,6 +7,9 @@ link.rel = 'stylesheet';
 link.href = 'https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css';
 document.head.appendChild(link);
 
+const html = document.getElementsByTagName('html')[0];
+html.setAttribute('data-theme', 'sunset');
+
 const rootEl = document.getElementById('root');
 if (rootEl) {
   const root = ReactDOM.createRoot(rootEl);

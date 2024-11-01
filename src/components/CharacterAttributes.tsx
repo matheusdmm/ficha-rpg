@@ -32,22 +32,21 @@ const CharacterAttributes: React.FC<CharacterAttributesProps> = ({
     <div>
       <form onSubmit={onSubmit}>
         <label className="block mb-4">
-          <span className="text-lg font-semibold text-[#4A3B2A]">Nome do Personagem</span>
           <input
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
+            className="input input-bordered w-full max-w-xs"
+            placeholder="Nome do Personagem"
             required
           />
         </label>
 
         <label className="block mb-4">
-          <span className="text-lg font-semibold text-[#4A3B2A]">Raça</span>
           <select
             value={selectedRace}
             onChange={e => setSelectedRace(e.target.value)}
-            className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
+            className="select select-bordered w-full max-w-xs"
             required
           >
             <option value="">Selecione uma raça</option>
@@ -60,11 +59,10 @@ const CharacterAttributes: React.FC<CharacterAttributesProps> = ({
         </label>
 
         <label className="block mb-4">
-          <span className="text-lg font-semibold text-[#4A3B2A]">Subraça</span>
           <select
             value={selectedSubRace}
             onChange={e => setSelectedSubRace(e.target.value)}
-            className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
+            className="select select-bordered w-full max-w-xs"
             required
           >
             <option value="">Selecione uma subraça</option>
@@ -86,7 +84,7 @@ const CharacterAttributes: React.FC<CharacterAttributesProps> = ({
                 type="number"
                 value={stats[stat as keyof CharacterStats]}
                 onChange={e => handleStatChange(stat as Stats, parseInt(e.target.value))}
-                className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
+                className="input input-bordered w-full max-w-xs no-scrollbar"
                 required
               />
             </label>

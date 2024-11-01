@@ -8,7 +8,7 @@ Um aplicativo de criação de ficha de personagem, rolagem de dados D20 e consul
 - **Three.js**: Biblioteca JavaScript para criar gráficos 3D no navegador.
 - **TypeScript**: Superset do JavaScript que adiciona tipagem estática.
 - **Tailwind CSS**: Framework CSS para estilização moderna e responsiva.
-- **Context API**: Para gerenciamento de estado global.
+- **Daisy UI**: Css Toolkit.
 - **React Select**: Para listas de multipla seleção.
 - **D&D 5E API**: Para consulta de classes e habilidades.
 - **Deep AI**: Para os avatares dos personagens.

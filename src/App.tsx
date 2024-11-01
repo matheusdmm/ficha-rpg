@@ -4,7 +4,7 @@ import CharacterSheet from './pages/CharacterSheet';
 import CreateCharacter from './pages/CreateCharacter';
 import CharacterList from './pages/CharacterList';
 import StatusSummary from './pages/CharacterSummary';
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/Sidebar2';
 import { CharacterProvider } from './context/CharacterContext';
 
 import './App.css';
@@ -13,7 +13,7 @@ const App: React.FC = () => {
   return (
     <CharacterProvider>
       <Router>
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="">
           <Sidebar />
 
           <div className="flex-1 p-6">

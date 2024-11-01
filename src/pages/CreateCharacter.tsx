@@ -115,7 +115,7 @@ const CreateCharacter: React.FC = () => {
     <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-lg overflow-y-auto">
       <h1 className="text-3xl font-bold mb-6 text-[#4A3B2A] text-center">Criar Personagem</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl px-4 divide-y divide-gray-300">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl px-4">
         <AvatarSelection selectedAvatar={selectedAvatar} onSelectAvatar={setSelectedAvatar} />
 
         <CharacterAttributes
@@ -131,33 +131,26 @@ const CreateCharacter: React.FC = () => {
           selectedSubRace={selectedSubRace}
           setSelectedSubRace={setSelectedSubRace}
         />
-
-        <EquipmentSelector
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
-          selectedEquipments={selectedEquipments}
-          setSelectedEquipments={setSelectedEquipments}
-        />
-
-        <ClassSelector
-          selectedClass={selectedClass}
-          setSelectedClass={setSelectedClass}
-          classOptions={classOptions}
-        />
       </div>
 
-      <button
-        onClick={() => rollDie(20)}
-        className="mt-6 w-full max-w-xs p-3 bg-[#4B8B3B] text-white rounded hover:bg-[#3B6831] font-semibold transition duration-200"
-      >
+      <EquipmentSelector
+        selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
+        selectedEquipments={selectedEquipments}
+        setSelectedEquipments={setSelectedEquipments}
+      />
+
+      <ClassSelector
+        selectedClass={selectedClass}
+        setSelectedClass={setSelectedClass}
+        classOptions={classOptions}
+      />
+
+      <button onClick={() => rollDie(20)} className="btn btn-outline">
         Rolar D20
       </button>
 
-      <button
-        type="submit"
-        onClick={handleSubmit}
-        className="mt-4 w-full max-w-xs p-3 bg-[#4B8B3B] text-white rounded hover:bg-[#3B6831] font-semibold transition duration-200"
-      >
+      <button type="submit" onClick={handleSubmit} className="btn btn-success">
         Criar Personagem
       </button>
 
