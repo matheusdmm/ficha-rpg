@@ -85,7 +85,7 @@ const CharacterAttributes: React.FC<CharacterAttributesProps> = ({
               <input
                 type="number"
                 value={stats[stat as keyof CharacterStats]}
-                onChange={e => handleStatChange(stat as keyof Stats, parseInt(e.target.value))}
+                onChange={e => handleStatChange(stat as Stats, parseInt(e.target.value))}
                 className="mt-2 p-3 border border-[#D1D5DB] bg-[#F7F7F7] rounded w-full text-center text-[#5A4733] font-mono transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#B89B6F]"
                 required
               />

@@ -19,3 +19,13 @@ export interface IStats {
   wisdom: number;
   charisma: number;
 }
+
+export type CharacterData = {
+    name: string;
+    stats: Stats;
+    avatar: string;
+    class: string;
+    race: string;
+    subRace: string;
+    equipment: any[];
+  };

@@ -6,6 +6,13 @@ interface CharacterCardProps {
 }
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
+  console.log(character);
+  console.log(character.stats);
+
+  if (!character || !character.stats) {
+    return <span className="loading loading-bars loading-lg"></span>;
+  }
+
   return (
     <div className="relative w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
       <div className="grid grid-cols-2 gap-4 p-4">
@@ -30,7 +37,10 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
           <h3 className="text-xl font-semibold mb-4 text-[#4A3B2A] border-b pb-2">Atributos</h3>
           <div className="grid grid-cols-2 gap-2">
             {Object.entries(character.stats).map(([key, value]) => (
-              <div key={key} className="bg-gray-100 p-2 rounded text-center">
+              <div
+                key={key as keyof CharacterStats}
+                className="bg-gray-100 p-2 rounded text-center"
+              >
                 <strong className="block text-sm text-gray-600 capitalize">{key}</strong>
                 <span className="text-lg font-bold text-[#4A3B2A]">{value}</span>
               </div>

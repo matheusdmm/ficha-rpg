@@ -7,7 +7,7 @@ import AvatarSelection from '../components/AvatarSelection';
 import CharacterAttributes from '../components/CharacterAttributes';
 import EquipmentSelector from '../components/EquipmentSelector';
 import { Stats } from '../types/Stats';
-import { createCharacter, updateCharacter } from '../logic/CharacterStorage';
+import { createCharacter, getCharacter } from '../logic/CharacterStorage';
 import { baseValues, RandomBaseValues } from '../Data/BaseCharacter';
 
 const CreateCharacter: React.FC = () => {
@@ -27,6 +27,25 @@ const CreateCharacter: React.FC = () => {
   const navigate = useNavigate();
 
   document.title = 'Criação de Personagem';
+
+  const loadChar = () => {
+    useEffect(() => {
+      const loadCharacter = async () => {
+        const savedCharacter = await getCharacter();
+        if (savedCharacter) {
+          setName(savedCharacter.name || '');
+          setSelectedAvatar(savedCharacter.avatar || '');
+          setSelectedClass(savedCharacter.class || '');
+          setSelectedRace(savedCharacter.race || '');
+          setSelectedSubRace(savedCharacter.subRace || '');
+          setSelectedEquipments(savedCharacter.equipment || []);
+          setStats(savedCharacter.stats || RandomBaseValues);
+        }
+      };
+
+      loadCharacter();
+    }, []);
+  };
 
   useEffect(() => {
     const loadClasses = async () => {
@@ -69,9 +88,9 @@ const CreateCharacter: React.FC = () => {
       subRace: selectedSubRace,
       equipment: selectedEquipments,
     };
+
     createCharacter(characterData);
 
-    // reset
     setName('');
     setStats(RandomBaseValues());
     setSelectedAvatar('');
@@ -80,6 +99,7 @@ const CreateCharacter: React.FC = () => {
     setSelectedSubRace('');
     setSelectedCategories([]);
     setSelectedEquipments([]);
+
     navigate('/character-sheet');
   };
 
@@ -95,7 +115,7 @@ const CreateCharacter: React.FC = () => {
     <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-lg overflow-y-auto">
       <h1 className="text-3xl font-bold mb-6 text-[#4A3B2A] text-center">Criar Personagem</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl px-4 divide-y divide-gray-300">
         <AvatarSelection selectedAvatar={selectedAvatar} onSelectAvatar={setSelectedAvatar} />
 
         <CharacterAttributes

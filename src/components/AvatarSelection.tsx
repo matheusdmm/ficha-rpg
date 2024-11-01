@@ -40,6 +40,10 @@ const AvatarSelection: React.FC<AvatarSelectionProps> = ({ selectedAvatar, onSel
     onSelectAvatar(avatars[newIndex]);
   };
 
+  const handleAvatarClick = () => {
+    onSelectAvatar(avatars[currentIndex]);
+  };
+
   return (
     <div className="text-center mb-6">
       <h2 className="text-2xl font-bold text-[#4A3B2A] mb-4">Escolher Avatar</h2>
@@ -55,8 +59,9 @@ const AvatarSelection: React.FC<AvatarSelectionProps> = ({ selectedAvatar, onSel
         <img
           src={avatars[currentIndex]}
           alt={`Avatar ${currentIndex + 1}`}
-          className={`h-32 w-32 object-cover rounded-lg shadow-lg cursor-pointer ${
-            selectedAvatar === avatars[currentIndex] ? 'border-4 border-[#4B8B3B]' : ''
+          onClick={handleAvatarClick}
+          className={`h-56 w-56 object-cover mask mask-hexagon shadow-lg cursor-pointer ${
+            selectedAvatar === avatars[currentIndex] ? 'border-4 border-blue-500' : ''
           }`}
         />
 
@@ -67,8 +72,6 @@ const AvatarSelection: React.FC<AvatarSelectionProps> = ({ selectedAvatar, onSel
           {'>'}
         </button>
       </div>
-
-      <p className="text-sm mt-2 text-gray-600">Clique na imagem para selecionar o avatar</p>
     </div>
   );
 };
